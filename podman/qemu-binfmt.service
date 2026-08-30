@@ -1,0 +1,12 @@
+[Unit]
+Description=Restore QEMU binfmt registrations
+After=local-fs.target network.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sh -c "umount /proc/sys/fs/binfmt_misc 2>/dev/null || true; mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc"
+ExecStart=/usr/local/bin/qemu-binfmt-conf.sh --qemu-suffix "-static" --qemu-path "/usr/bin" -p yes
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
